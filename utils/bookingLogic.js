@@ -25,10 +25,6 @@ async function checkForExistingBooking() {
 async function fetchDataAndParseSlots() {
   try {
     const response = await axios.request(slotConfig);
-    if (response.data.results.venues.length === 0) {
-      console.log('No slots available. Please run again after reservations open.');
-      return false;
-    }
     console.log(
       `Checking for reservations at ${response.data.results.venues[0].venue.name} on ${convertDateToLongFormat(
         process.env.DATE
