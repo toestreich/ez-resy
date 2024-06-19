@@ -1,8 +1,13 @@
-import axios from 'axios';
-import FormData from 'form-data';
-import { slotParser } from './slotParser.js';
-import { convertDateToLongFormat } from './helpers.js';
-import { existingReservationConfig, slotConfig, bookingConfig, finalConfig } from '../config.js';
+import axios from "axios";
+import FormData from "form-data";
+import { slotParser } from "./slotParser.js";
+import { convertDateToLongFormat } from "./helpers.js";
+import {
+  existingReservationConfig,
+  slotConfig,
+  bookingConfig,
+  finalConfig,
+} from "../config.js";
 
 // First, we'll see if we already have a reservation
 async function checkForExistingBooking() {
@@ -25,10 +30,18 @@ async function checkForExistingBooking() {
 async function fetchDataAndParseSlots() {
   try {
     const response = await axios.request(slotConfig);
+    if (response.data.results.venues.length === 0) {
+      console.log(
+        "No slots available. Please run again after reservations open.",
+      );
+      return false;
+    }
     console.log(
-      `Checking for reservations at ${response.data.results.venues[0].venue.name} on ${convertDateToLongFormat(
-        process.env.DATE
-      )} for ${process.env.PARTY_SIZE} people...`
+      `Checking for reservations at ${
+        response.data.results.venues[0].venue.name
+      } on ${convertDateToLongFormat(process.env.DATE)} for ${
+        process.env.PARTY_SIZE
+      } people...`,
     );
     let slots = response.data.results.venues[0].slots;
     const slotId = await slotParser(slots);
@@ -52,9 +65,12 @@ async function getBookingConfig(slotId) {
 async function makeBooking(book_token) {
   let config = finalConfig(process.env.AUTH_TOKEN);
   const formData = new FormData();
-  formData.append('struct_payment_method', JSON.stringify({ id: process.env.PAYMENT_ID }));
-  formData.append('book_token', book_token);
-  formData.append('source_id', 'resy.com-venue-details');
+  formData.append(
+    "struct_payment_method",
+    JSON.stringify({ id: process.env.PAYMENT_ID }),
+  );
+  formData.append("book_token", book_token);
+  formData.append("source_id", "resy.com-venue-details");
 
   try {
     const response = await axios.post(config.url, formData, {
@@ -69,4 +85,9 @@ async function makeBooking(book_token) {
   }
 }
 
-export { checkForExistingBooking, fetchDataAndParseSlots, getBookingConfig, makeBooking };
+export {
+  checkForExistingBooking,
+  fetchDataAndParseSlots,
+  getBookingConfig,
+  makeBooking,
+};
