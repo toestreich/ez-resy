@@ -1,3 +1,9 @@
+const VENUE_ID="1505"; // don angie 1505
+const DATE="2024-12-22";
+const EARLIEST="17:00";
+const LATEST="19:30";
+const PARTY_SIZE=6;
+
 function existingReservationConfig(authToken) {
   let configObject = {
     method: 'get',
@@ -30,7 +36,7 @@ function existingReservationConfig(authToken) {
 let slotConfig = {
   method: 'get',
   maxBodyLength: Infinity,
-  url: `https://api.resy.com/4/find?lat=0&long=0&day=${process.env.DATE}&party_size=${process.env.PARTY_SIZE}&venue_id=${process.env.VENUE_ID}`,
+  url: `https://api.resy.com/4/find?lat=0&long=0&day=${DATE}&party_size=${PARTY_SIZE}&venue_id=${VENUE_ID}`,
   headers: {
     authority: 'api.resy.com',
     accept: 'application/json, text/plain, */*',
@@ -57,7 +63,7 @@ function bookingConfig(token) {
   const configObject = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: `https://api.resy.com/3/details?&day=${process.env.DATE}&party_size=${process.env.PARTY_SIZE}&config_id=${slotId}`,
+    url: `https://api.resy.com/3/details?&day=${DATE}&party_size=${PARTY_SIZE}&config_id=${slotId}`,
     headers: {
       authority: 'api.resy.com',
       accept: 'application/json, text/plain, */*',
@@ -110,4 +116,4 @@ function finalConfig(authToken) {
   return configObject;
 }
 
-export { existingReservationConfig, slotConfig, bookingConfig, finalConfig };
+export { existingReservationConfig, slotConfig, bookingConfig, finalConfig, DATE, PARTY_SIZE, VENUE_ID, EARLIEST, LATEST };

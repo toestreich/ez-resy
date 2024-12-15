@@ -7,12 +7,15 @@ import {
   slotConfig,
   bookingConfig,
   finalConfig,
+  VENUE_ID, 
+  DATE, 
+  PARTY_SIZE
 } from "../config.js";
 
 // First, we'll see if we already have a reservation
 async function checkForExistingBooking() {
   let config = existingReservationConfig(process.env.AUTH_TOKEN);
-  let venueId = process.env.VENUE_ID;
+  let venueId = VENUE_ID;
   try {
     const response = await axios.request(config);
     if (response.data.reservations[0]?.venue?.id == venueId) {
@@ -39,8 +42,8 @@ async function fetchDataAndParseSlots() {
     console.log(
       `Checking for reservations at ${
         response.data.results.venues[0].venue.name
-      } on ${convertDateToLongFormat(process.env.DATE)} for ${
-        process.env.PARTY_SIZE
+      } on ${convertDateToLongFormat(DATE)} for ${
+        PARTY_SIZE
       } people...`,
     );
     let slots = response.data.results.venues[0].slots;

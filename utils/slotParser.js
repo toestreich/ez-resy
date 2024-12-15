@@ -1,4 +1,6 @@
 import { convertTimeToTwelveHourFormat, isTimeBetween } from './helpers.js';
+import { EARLIEST, LATEST }from '../config.js'; 
+
 
 async function slotParser(slots) {
   const numberOfSlots = slots.length;
@@ -18,7 +20,7 @@ async function slotParser(slots) {
 }
 
 async function slotChooser(slot, time, type) {
-  if (isTimeBetween(process.env.EARLIEST, process.env.LATEST, slot.date.start)) {
+  if (isTimeBetween(EARLIEST, LATEST, slot.date.start)) {
     console.log(`Booking a prime slot at ${time} ${type === 'Dining Room' ? 'in' : 'on'} the ${type}!`);
     return slot.config.token;
   }
